@@ -11,7 +11,7 @@ class BuildMine extends DelayedAction_1.default {
             .process(MovementCost_1.MovementCost, this.unit(), this)
             .sort((a, b) => b - a);
         super.perform(moveCost || 0, () => {
-            new Mine_1.Mine(this.unit().tile());
+            new Mine_1.default(this.unit().tile());
         });
         this.ruleRegistry().process(Moved_1.Moved, this.unit(), this);
     }
