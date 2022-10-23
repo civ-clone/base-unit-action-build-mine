@@ -1,4 +1,3 @@
 # base-unit-action-build-mine
 
-This is a template repo.
-
+This package provides the `BuildMine` `Action` for `Unit`s.
