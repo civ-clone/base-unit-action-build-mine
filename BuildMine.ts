@@ -1,3 +1,4 @@
+import { BusyContext } from '@civ-clone/core-unit/BusyRegistry';
 import BuildingMine from './Rules/BuildingMine';
 import DelayedAction from '@civ-clone/core-unit/DelayedAction';
 import Moved from '@civ-clone/core-unit/Rules/Moved';
@@ -26,9 +27,20 @@ export class BuildMine extends DelayedAction {
 registerDelayedAction({
   BusyRule: BuildingMine,
   handler: COMPLETE,
-  action: (unit: Unit) => new BuildMine(unit.tile(), unit.tile(), unit),
-  complete: (unit: Unit) => {
-    new Mine(unit.tile());
+  // Built from the game the unit is loaded into, so finishing after a load writes where that game looks
+  //  (civ-clone/web-renderer#248).
+  action: (unit: Unit, context: BusyContext) =>
+    new BuildMine(
+      unit.tile(),
+      unit.tile(),
+      unit,
+      context.rules,
+      context.turn,
+      context.pendingEffects
+    ),
+  // Through the rules the action was built with, the game's own, so its `Built` rules register it there.
+  complete: (unit: Unit, pendingEffect, action) => {
+    new Mine(unit.tile(), action.ruleRegistry());
   },
 });
 
